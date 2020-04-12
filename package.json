@@ -1,0 +1,26 @@
+{
+  "name": "inventory-oauth2-application",
+  "version": "1.0.0",
+  "description": "A sample oauth 2.0 server application for partner",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.19.0",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "mongoose": "^5.8.4",
+    "nodemon": "^2.0.2",
+    "oauth2orize": "^1.11.0",
+    "passport": "^0.4.1",
+    "passport-http": "^0.3.0",
+    "passport-http-bearer": "^1.0.1",
+    "passport-local": "^1.0.0",
+    "passport-oauth2": "^1.5.0"
+  }
+}
