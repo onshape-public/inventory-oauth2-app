@@ -41,8 +41,27 @@ Execute the following commands to create a duplicate of a repository; you need t
     $ git clone https://github.com/exampleuser/new-respository.git
     $ cd new-repository
     $ heroku create
+    $ heroku config:set ADMINUSERNAME=<username>
+    $ heroku config:set ADMINUSERPASSWORD=<password>
     $ heroku config:set ENVIRONMENT=production
     $ git push heroku master
+      # Ensure that the build pack for the application in the heroku should be `heroku/nodejs`
+      # Make sure heroku application has `mLab MongoDB` add-on installed.
+
+##### running the heroku application
+1. Open browser for `http://<heroku-application-url>/api` url, if browser shows below content in window, applications started successfully.
+    $ {"message":"You are running inventory application!"}
+2. Create admin user by making POST request to `http://<heroku-application-url>/api/users/create-admin-user` from postman.
+3. Create user with following POST request `https://<heroku-application-url>/api/users` with following body and basic authorization with admin creds created in step 2.
+    $ { "username": "<user-name>", "password": "<user-password>" }
+4. Create application by making POST call to `http://<heroku-application-url>/api/applications` with post body. This keys will be used for oauth from onshape.
+  $ { "name": "<application-name>", "clientId": "<client-id>", "clientSecret": "<client-secret>" }
+5. You can add these clientId and clientSecret in OAuth tab for the application.
+
+##### **About this code**
+  - All the api endpoints are in server.js
+  - Respective controllers are having the logic to get list/individual models
+  - MongoDB collections get created from the model objects in the `/models` directory
 
 ### **Reference Documentation**
 #### ***Heroku***

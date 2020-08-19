@@ -1,49 +1,38 @@
 
 var uuid = require('uuid');
-// var sleep = require('sleep');
-
 
 exports.generate_v1 = function(req, res) {
-        let status = req.query.status;
-        var results = [];
-        reqbody = req.body;
+    let status = req.query.status;
+    var results = [];
+    reqbody = req.body;
 
-        if(status && status >=400 && status < 600) {
-            res.status(status).json({
-                "error" : "Failed to generate number"
-            });
-        } else {
-            let response = reqbody.reduce((promiseChain, partNumber) => {
-                return promiseChain.then(() => new Promise((resolve)=> {
-                    generate_uuid_v1(results, partNumber, resolve);
-                }));
-             }, Promise.resolve());
-            // response.then(req => {
-            //     if (req.query && req.query.wait && Number.isInteger(req.query.wait)) {
-            //        sleep.sleep(req.query.wait);
-            //        console.log("sleeping ...");
-            //     }
-
-            // }).then(() => res.status(200).json(results));
-            response.then(() => res.status(200).json(results));
-        }
-
-    //res.status(200).json({"next" : uuid.v1()});
+    if(status && status >=400 && status < 600) {
+        res.status(status).json({
+            "error" : "Failed to generate number"
+        });
+    } else {
+        let response = reqbody.reduce((promiseChain, partNumber) => {
+            return promiseChain.then(() => new Promise((resolve)=> {
+                generate_uuid_v1(results, partNumber, resolve);
+            }));
+          }, Promise.resolve());
+        response.then(() => res.status(200).json(results));
+    }
 }
 
 function generate_uuid_v1(results, partNumber, cb) {
-    setTimeout(() => {
-        console.log("processing " + partNumber);
-        results.push({
-            "id" : partNumber.id,
-            "documentId" : partNumber.documentId,
-            "elementId" : partNumber.elementId,
-            "workspaceId" : partNumber.workspaceId,
-            "elementType" : partNumber.elementType,
-            "partId" : partNumber.partId,
-            "partNumber" : uuid.v1()
-        });
-        cb(); }, 100);
+  setTimeout(() => {
+      console.log("processing " + partNumber);
+      results.push({
+          "id" : partNumber.id,
+          "documentId" : partNumber.documentId,
+          "elementId" : partNumber.elementId,
+          "workspaceId" : partNumber.workspaceId,
+          "elementType" : partNumber.elementType,
+          "partId" : partNumber.partId,
+          "partNumber" : uuid.v1()
+      });
+      cb(); }, 100);
 }
 
 
