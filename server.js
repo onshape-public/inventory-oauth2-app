@@ -7,7 +7,10 @@ var http = require('http');
 var path = require('path');
 var authController = require('./controllers/auth');
 var partController = require('./controllers/part');
+var partNumberController = require('./controllers/partNumber');
+var generatorController = require('./controllers/generator');
 var applicationController = require('./controllers/application');
+var generatorController = require('./controllers/generator');
 var session = require('express-session');
 var oauth2Controller = require('./controllers/oauth2');
 var userController = require('./controllers/user');
@@ -51,6 +54,15 @@ router.route('/parts')
   .post(authController.isAuthenticated, partController.postParts)
   .get(authController.isAuthenticated, partController.getParts);
 
+// Create endpointd for /generate
+router.route('/v1/generate')
+  .post(generatorController.generate_v1);
+
+router.route('/v4/generate')
+  .post(generatorController.generate_v4);
+
+router.route('/v5/generate')
+  .post(generatorController.generate_v5);
 
 // Create endpoint handlers for /parts
 router.route('/parts-list')
@@ -72,6 +84,9 @@ router.route('/parts/:part_number')
 // Create endpoint handlers for /parts/part/:part_id
 router.route('/parts/part/:part_id')
   .delete(authController.isAuthenticated, partController.deletePartById);
+
+router.route('/nextpartnumbers')
+  .post(partNumberController.incrementPartNumber);
 
 // Create endpoint handlers for /users
 router.route('/users')
