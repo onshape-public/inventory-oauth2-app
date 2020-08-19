@@ -6,14 +6,14 @@ Nodejs and Npm should be installed.
 1. Clone this github repo on local.
 2. Run below command to install npm dependencies
     $ npm install
-3. Set environment variables for ADMINUSERNAME and ADMINUSERPASSWORD
+3. Set environment variables for ADMINUSERNAME and ADMINUSERPASSWORD. This will be used to create admin user
     $ export ADMINUSERNAME=<username>
     $ export ADMINUSERPASSWORD=<password>
 4. Run the application with below command
     $ node server.js
 5. Open browser for `http://localhost:3000/api` url, if browser shows below content in window, applications started successfully.
     $ {"message":"You are running inventory application!"}
-6. Make POST api call to `http://localhost:3000/api/users/create-admin-user`. It will create admin user
+6. Make POST api call to `http://localhost:3000/api/users/create-admin-user` (You can use postman). It will create admin user with username/password from step 3.
 7. Create application by making POST call to `http://localhost:3000/api/applications` with post body. This keys will be used for oauth from onshape.
   name:<application-name>
   clientId:<client-id>
@@ -41,7 +41,7 @@ Execute the following commands to create a duplicate of a repository; you need t
     $ git clone https://github.com/exampleuser/new-respository.git
     $ cd new-repository
     $ heroku create
-    $ heroku set:config ENVIRONMENT=production
+    $ heroku config:set ENVIRONMENT=production
     $ git push heroku master
 
 ### **Reference Documentation**
