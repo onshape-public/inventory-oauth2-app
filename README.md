@@ -3,18 +3,26 @@
 Nodejs and Npm should be installed.
 
 #### ***Running on local***
-1. Clone this github repo on local.
-2. Run below command to install npm dependencies
+Clone this github repo on local and run below command to install the dependencies.
+
     $ npm install
-3. Set environment variables for ADMINUSERNAME and ADMINUSERPASSWORD. This will be used to create admin user
+
+Set environment variables for ADMINUSERNAME and ADMINUSERPASSWORD. This will be used to create admin user
+    
     $ export ADMINUSERNAME=<username>
     $ export ADMINUSERPASSWORD=<password>
-4. Run the application with below command
+    
+Run the application with below command
+
     $ node server.js
-5. Open browser for `http://localhost:3000/api` url, if browser shows below content in window, applications started successfully.
+    
+Open browser for `http://localhost:3000/api` url, if browser shows below content in window, applications started successfully.
+
     $ {"message":"You are running inventory application!"}
-6. Make POST api call to `http://localhost:3000/api/users/create-admin-user` (You can use postman). It will create admin user with username/password from step 3.
-7. Create application by making POST call to `http://localhost:3000/api/applications` with post body. This keys will be used for oauth from onshape.
+
+Make POST api call to `http://localhost:3000/api/users/create-admin-user` (You can use postman). It will create admin user with username/password from step 3.
+
+Create application by making POST call to `http://localhost:3000/api/applications` with post body. This keys will be used for oauth from onshape.
   name:<application-name>
   clientId:<client-id>
   clientSecret:<client-secret>
@@ -49,14 +57,22 @@ Execute the following commands to create a duplicate of a repository; you need t
       # Make sure heroku application has `mLab MongoDB` add-on installed.
 
 ##### running the heroku application
-1. Open browser for `http://<heroku-application-url>/api` url, if browser shows below content in window, applications started successfully.
+
+Open browser for `http://<heroku-application-url>/api` url, if browser shows below content in window, applications started successfully.
+
     $ {"message":"You are running inventory application!"}
-2. Create admin user by making POST request to `http://<heroku-application-url>/api/users/create-admin-user` from postman.
-3. Create user with following POST request `https://<heroku-application-url>/api/users` with following body and basic authorization with admin creds created in step 2.
+
+Create admin user by making POST request to `http://<heroku-application-url>/api/users/create-admin-user` from postman.
+
+Create user with following POST request `https://<heroku-application-url>/api/users` with following body and basic authorization with admin creds created in step 
+
     $ { "username": "<user-name>", "password": "<user-password>" }
-4. Create application by making POST call to `http://<heroku-application-url>/api/applications` with post body. This keys will be used for oauth from onshape.
-  $ { "name": "<application-name>", "clientId": "<client-id>", "clientSecret": "<client-secret>" }
-5. You can add these clientId and clientSecret in OAuth tab for the application.
+
+Create application by making POST call to `http://<heroku-application-url>/api/applications` with post body. This keys will be used for oauth from onshape.
+    
+    $ { "name": "<application-name>", "clientId": "<client-id>", "clientSecret": "<client-secret>" }
+
+You can add these clientId and clientSecret in OAuth tab for the application.
 
 ##### **About this code**
   - All the api endpoints are in server.js
