@@ -4,6 +4,9 @@ var User = require('../models/user');
 var Application = require('../models/application');
 var Token = require('../models/token');
 var Code = require('../models/code');
+const application = require('../models/application');
+const { db } = require('../models/user');
+var tokenTimeout = process.env.TOKENTIMEOUT || 121;
 
 function uid (len) {
     var buf = []
@@ -69,7 +72,8 @@ server.exchange(oauth2orize.exchange.code(function(application, code, redirectUr
 
         // Create a new access token
         var token = new Token({
-          value: uid(256),
+          access: uid(256),
+          refresh: uid(256),
           applicationId: authCode.applicationId,
           userId: authCode.userId
         });
@@ -77,10 +81,36 @@ server.exchange(oauth2orize.exchange.code(function(application, code, redirectUr
         // Save the access token and check for errors
         token.save(function (err) {
           if (err) { return callback(err); }
-
-          callback(null, token.value);
+          const params = {"expires_in" : tokenTimeout} ;
+          callback(null, token.access, token.refresh, params);
         });
       });
+    });
+  }));
+
+  server.exchange(oauth2orize.exchange.refreshToken(function(application, refreshToken, scope, callback) {
+    Token.findOne({refresh : refreshToken}, function(err, token) {
+      if (err) { return callback(err, null, null); }
+
+      if (!token) { return callback(err, null, null); }
+
+      var newtoken = new Token({
+        access: uid(256),
+        refresh: uid(256),
+        applicationId: application._id,
+        userId: application.userId
+      });
+
+      token.deleteOne(function(err, deletedToken) {
+
+        if (err) {return callback(err);}
+        newtoken.save(function(err) {
+          if (err) {return callback(err, null, null);}
+          const params = {"expires_in" : tokenTimeout} ;
+          callback(null, newtoken.access, newtoken.refresh, params);
+        });
+      });
+       
     });
   }));
 
