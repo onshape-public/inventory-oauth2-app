@@ -13,7 +13,9 @@ Set environment variables for ADMINUSERNAME and ADMINUSERPASSWORD. This will be 
     $ export ADMINUSERPASSWORD=<password>
 
 Set environment variable TOKENTIMEOUT to set token expiry time in seconds.
+
     $ export TOKENTIMEOUT=<expiry time in seconds>
+
 Default is 121 seconds. If you want to disable refresh of token, set this value to 0.
     
 Run the application with below command
