@@ -50,6 +50,12 @@ passport.use(new BearerStrategy(function(accessToken, callback) {
     // No token found
     if (!token) { return callback(null, false); }
 
+    // Token expired
+    var now = new Date();
+    if ((Math.abs(token.dateModified.getTime() - now.getTime()) / 1000) > token.expiryTime) {
+        return callback(null, false);
+    }
+
     User.findOne({ _id: token.userId }, function (err, user) {
       if (err) { return callback(err); }
 
