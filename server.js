@@ -56,13 +56,13 @@ router.route('/parts')
 
 // Create endpointd for /generate
 router.route('/v1/generate')
-  .post(generatorController.generate_v1);
+  .post(authController.isAuthenticated,generatorController.generate_v1);
 
 router.route('/v4/generate')
-  .post(generatorController.generate_v4);
+  .post(authController.isAuthenticated,generatorController.generate_v4);
 
 router.route('/v5/generate')
-  .post(generatorController.generate_v5);
+  .post(authController.isAuthenticated,generatorController.generate_v5);
 
 // Create endpoint handlers for /parts
 router.route('/parts-list')

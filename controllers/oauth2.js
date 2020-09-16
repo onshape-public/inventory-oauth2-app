@@ -75,7 +75,10 @@ server.exchange(oauth2orize.exchange.code(function(application, code, redirectUr
           access: uid(256),
           refresh: uid(256),
           applicationId: authCode.applicationId,
-          userId: authCode.userId
+          userId: authCode.userId,
+          expiryTime : tokenTimeout,
+          dateCreated : new Date(),
+          dateModified : new Date()
         });
 
         // Save the access token and check for errors
@@ -98,7 +101,10 @@ server.exchange(oauth2orize.exchange.code(function(application, code, redirectUr
         access: uid(256),
         refresh: uid(256),
         applicationId: application._id,
-        userId: application.userId
+        userId: application.userId,
+        expiryTime : tokenTimeout,
+        dateCreated : new Date(),
+        dateModified : new Date()
       });
 
       token.deleteOne(function(err, deletedToken) {
