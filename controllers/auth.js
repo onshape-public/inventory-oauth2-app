@@ -52,6 +52,7 @@ passport.use(new BearerStrategy(function(accessToken, callback) {
 
     // Token expired
     var now = new Date();
+
     if ((Math.abs(token.dateModified.getTime() - now.getTime()) / 1000) > token.expiryTime) {
         return callback(null, false);
     }
