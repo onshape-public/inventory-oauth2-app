@@ -28,12 +28,12 @@ Open browser for `http://localhost:3000/api` url, if browser shows below content
 
 Make POST api call to `http://localhost:3000/api/users/create-admin-user` (You can use postman or following curl command). It will create admin user with username/password from step 3.
 
-  `curl -X POST http://localhost:3000/api/applications`
+  `curl -d '{"username" : <ADMINUSERNAME>, "password" : <ADMINUSERPASSWORD>}' http://localhost:4000/api/users/create-admin-user`
 
 Create application by making POST call to `http://localhost:3000/api/applications` with post body as shown in following curl command.
     
     
-    curl -u <ADMINUSERNAME>:<ADMINUSERPASSWORD> -d '{"name" : <APPNAME>, "clientId" : <CLIENTID> , "clientSecret" : <CLIENTSECRET>}' -H 'Content-Type: application/json' http://localhost:3000/api/applications
+        curl -u <ADMINUSERNAME>:<ADMINUSERPASSWORD> -d '{"name" : <APPNAME>, "clientId" : <CLIENTID> , "clientSecret" : <CLIENTSECRET>}' -H 'Content-Type: application/json' http://localhost:3000/api/applications
 
 
 
