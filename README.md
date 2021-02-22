@@ -26,12 +26,15 @@ Open browser for `http://localhost:3000/api` url, if browser shows below content
 
     $ {"message":"You are running inventory application!"}
 
-Make POST api call to `http://localhost:3000/api/users/create-admin-user` (You can use postman). It will create admin user with username/password from step 3.
+Make POST api call to `http://localhost:3000/api/users/create-admin-user` (You can use postman or following curl command). It will create admin user with username/password from step 3.
 
-Create application by making POST call to `http://localhost:3000/api/applications` with post body. This keys will be used for oauth from onshape.
-  name:<application-name>
-  clientId:<client-id>
-  clientSecret:<client-secret>
+  `curl -d '{"username" : <ADMINUSERNAME>, "password" : <ADMINUSERPASSWORD>}' http://localhost:4000/api/users/create-admin-user`
+
+Create application by making POST call to `http://localhost:3000/api/applications` with post body as shown in following curl command.
+    
+    
+        curl -u <ADMINUSERNAME>:<ADMINUSERPASSWORD> -d '{"name" : <APPNAME>, "clientId" : <CLIENTID> , "clientSecret" : <CLIENTSECRET>}' -H 'Content-Type: application/json' http://localhost:3000/api/applications
+
 
 
 ### **Deploying to Heroku**
