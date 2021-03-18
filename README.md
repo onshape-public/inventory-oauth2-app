@@ -26,12 +26,25 @@ Open browser for `http://localhost:3000/api` url, if browser shows below content
 
     $ {"message":"You are running inventory application!"}
 
-Make POST api call to `http://localhost:3000/api/users/create-admin-user` (You can use postman). It will create admin user with username/password from step 3.
+Local setup will connects with following mongodb url
 
-Create application by making POST call to `http://localhost:3000/api/applications` with post body. This keys will be used for oauth from onshape.
-  name:<application-name>
-  clientId:<client-id>
-  clientSecret:<client-secret>
+    `mongodb://localhost:27017/inventoryapplicationdb`
+    
+To use this application, we need to follow below steps:
+
+1. Create admin user (api will create user from step 3)
+    
+    `$ curl http://localhost:3000/api/users/create-admin-user -X POST`
+    
+2. Create application user and password
+    
+    `$ curl -u <ADMINUSERNAME>:<ADMINUSERPASSWORD> -H 'Content-Type: application/json' -X POST --data-raw '{"username":"<new-application-user-name>","password":"<new-application-user-password>"}' http://localhost:3000/api/users`
+    
+3. Register the application. 
+
+    `$ curl -u <ADMINUSERNAME>:<ADMINUSERPASSWORD> -H 'Content-Type:application/json' -X POST --data-raw '{"name": "<your-app-name>", "clientId": "<your-client-id>", "clientSecret": "<your-client-secret>"}' http://localhost:3000/api/applications`
+    
+You will use `<your-client-id>` and `<your-client-secret>` in your External OAuth details at developer portal -> Oauth applications -> YOUR_ONSHAPE_APP -> External OAuth tab.
 
 
 ### **Deploying to Heroku**
@@ -58,6 +71,7 @@ Execute the following commands to create a duplicate of a repository; you need t
     $ heroku config:set ADMINUSERNAME=<username>
     $ heroku config:set ADMINUSERPASSWORD=<password>
     $ heroku config:set ENVIRONMENT=production
+    $ heroku config:set MONGODB_URI=mongodb+srv://<atals-db-user>:<atlas-db-password>@cluster0.mvdpk.mongodb.net/<your-db-name>?retryWrites=true&w=majority
     $ git push heroku master
       # Ensure that the build pack for the application in the heroku should be `heroku/nodejs`
       # Make sure heroku application has `mLab MongoDB` add-on installed.
