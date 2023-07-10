@@ -16,7 +16,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "mongoose": "^5.8.4",
-    "nodemon": "^2.0.2",
+    "nodemon": "^2.0.22",
     "oauth2orize": "^1.11.0",
     "passport": "^0.4.1",
     "passport-http": "^0.3.0",
