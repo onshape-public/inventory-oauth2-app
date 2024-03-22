@@ -34,10 +34,13 @@ server.serializeClient(function(client, callback) {
 
 // Register deserialization function
 server.deserializeClient(function(id, callback) {
-    Application.findOne({ _id: id }, function (err, application) {
-        if (err) { return callback(err); }
-        return callback(null, application);
-    });
+  Application.findOne({ _id: id })
+    .then(application => {
+      return callback(null, application);
+    })
+    .catch(err => {
+      return callback(err);
+    })
 });
 
 // Register authorization code grant type
@@ -51,82 +54,101 @@ server.grant(oauth2orize.grant.code(function(application, redirectUri, user, are
     });
 
     // Save the auth code and check for errors
-    code.save(function(err) {
-        if (err) { return callback(err); }
-
+    code.save()
+      .then(() => {
         callback(null, code.value);
-    });
+      })
+      .catch(err => {
+        callback(err);
+      });
 }));
 
 // Exchange authorization codes for access tokens
 server.exchange(oauth2orize.exchange.code(function(application, code, redirectUri, callback) {
-    Code.findOne({ value: code }, function (err, authCode) {
-      if (err) { return callback(err); }
-      if (authCode === undefined) { return callback(null, false); }
-      if (application._id.toString() !== authCode.applicationId) { return callback(null, false); }
-      if (redirectUri !== authCode.redirectUri) { return callback(null, false); }
+    Code.findOne({ value: code })
+      .then(authCode => {
+        if (authCode === undefined) { return callback(null, false); }
+        if (application._id.toString() !== authCode.applicationId) { return callback(null, false); }
+        if (redirectUri !== authCode.redirectUri) { return callback(null, false); }
 
-      // Delete auth code now that it has been used
-      authCode.remove(function (err) {
-        if(err) { return callback(err); }
+        // Delete auth code now that it has been used
+        authCode.remove()
+          .then(() => {
+            // Create a new access token
+            var token = new Token({
+              access: uid(256),
+              refresh: uid(256),
+              applicationId: authCode.applicationId,
+              userId: authCode.userId,
+              expiryTime : tokenTimeout,
+              dateCreated : new Date(),
+              dateModified : new Date()
+            });
 
-        // Create a new access token
-        var token = new Token({
+            // Save the access token and check for errors
+            token.save()
+              .then(() => {
+                const params = {"expires_in" : tokenTimeout};
+                callback(null, token.access, token.refresh, params);
+              })
+              .catch(err => {
+                callback(err)
+              });
+          })
+          .catch(err => {
+            return callback(err);
+          })
+      })
+      .catch(err => {
+        return callback(err);
+      });
+  }));
+
+  server.exchange(oauth2orize.exchange.refreshToken(function(application, refreshToken, scope, callback) {
+    Token.findOne({refresh : refreshToken})
+      .then(token => {
+        if (!token) { return callback(err, null, null); }
+
+        var newtoken = new Token({
           access: uid(256),
           refresh: uid(256),
-          applicationId: authCode.applicationId,
-          userId: authCode.userId,
+          applicationId: application._id,
+          userId: application.userId,
           expiryTime : tokenTimeout,
           dateCreated : new Date(),
           dateModified : new Date()
         });
 
-        // Save the access token and check for errors
-        token.save(function (err) {
-          if (err) { return callback(err); }
-          const params = {"expires_in" : tokenTimeout} ;
-          callback(null, token.access, token.refresh, params);
-        });
+        token.deleteOne()
+          .then(deletedToken => {
+            newtoken.save()
+              .then(() => {
+                const params = {"expires_in" : tokenTimeout};
+              callback(null, newtoken.access, newtoken.refresh, params);
+              })
+              .catch(err => {
+                callback(err, null, null);
+              });
+          })
+          .catch(err => {
+            return callback(err);
+          });
+      })
+      .catch(err => {
+        return callback(err);
       });
-    });
-  }));
-
-  server.exchange(oauth2orize.exchange.refreshToken(function(application, refreshToken, scope, callback) {
-    Token.findOne({refresh : refreshToken}, function(err, token) {
-      if (err) { return callback(err, null, null); }
-
-      if (!token) { return callback(err, null, null); }
-
-      var newtoken = new Token({
-        access: uid(256),
-        refresh: uid(256),
-        applicationId: application._id,
-        userId: application.userId,
-        expiryTime : tokenTimeout,
-        dateCreated : new Date(),
-        dateModified : new Date()
-      });
-
-      token.deleteOne(function(err, deletedToken) {
-
-        if (err) {return callback(err);}
-        newtoken.save(function(err) {
-          if (err) {return callback(err, null, null);}
-          const params = {"expires_in" : tokenTimeout} ;
-          callback(null, newtoken.access, newtoken.refresh, params);
-        });
-      });
-       
-    });
   }));
 
   // User authorization endpoint
 exports.authorization = [
     server.authorization(function(applicationId, redirectUri, callback) {
-      Application.findOne({ clientId: applicationId }, function (err, application) {
-        if (err) { return callback(err); }
-        return callback(null, application, redirectUri);
-      });
+      Application.findOne({ clientId: applicationId })
+        .then(application => {
+          return callback(null, application, redirectUri);
+        })
+        .catch(err => {
+          return callback(err);
+        });
     }),
     function(req, res){
       res.render('dialog', { transactionID: req.oauth2.transactionID, user: req.user, application: req.oauth2.client });

@@ -9,12 +9,13 @@ exports.postUsers = function(req, res) {
     isAdmin: false
   });
 
-  user.save(function(err) {
-    if (err)
+  user.save()
+    .then(() => {
+      res.json({ message: 'User added to the system!' });
+    })
+    .catch(err => {
       res.send(err);
-
-    res.json({ message: 'User added to the system!' });
-  });
+    });
 };
 
 // Create endpoint /api/users for GET
@@ -35,10 +36,11 @@ exports.createAdminUser = function(req, res) {
     isAdmin: true
   });
 
-  user.save(function(err) {
-    if (err)
+  user.save()
+    .then(() => {
+      res.json({ message: 'Admin user added to the system!' });
+    })
+    .catch(err => {
       res.send(err);
-
-    res.json({ message: 'Admin user added to the system!' });
-  });
+    });
 };

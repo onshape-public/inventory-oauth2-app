@@ -22,12 +22,13 @@ exports.postParts = function(req, res) {
   part.userId = req.user._id;
 
   // Save the part and check for errors
-  part.save(function(err) {
-    if (err)
+  part.save()
+    .then(() => {
+      res.json({ message: 'Part added to the Inventory!', data: part });
+    })
+    .catch(err => {
       res.send(err);
-
-    res.json({ message: 'Part added to the Inventory!', data: part });
-  });
+    });
 };
 
 // Create endpoint /api/parts for GET

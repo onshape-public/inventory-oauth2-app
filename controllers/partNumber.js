@@ -9,12 +9,13 @@ const resetPartNumber = function(req, res) {
         if(response.length === 0) {
             var partNumber = new PartNumber();
             partNumber.count = 0;
-            partNumber.save(function(err, p) {
-                if (err)
-                  res.send(err);
-
-                res.json({ message: 'Part added to the Inventory!', data: p });
-              });
+            partNumber.save()
+                .then(() => {
+                    res.json({ message: 'Part added to the Inventory!', data: p });
+                })
+                .catch(err => {
+                    res.send(err);
+                });
         } else {
             res.json(response);
         }
@@ -22,16 +23,17 @@ const resetPartNumber = function(req, res) {
 };
 exports.resetPartNumber = resetPartNumber;
 exports.incrementPartNumber = function(req, res) {
-    PartNumber.findOneAndUpdate({}, { $inc: { count: 1 } }, {new: true},function(err, response) {
-        if (err)
+    PartNumber.findOneAndUpdate({}, { $inc: { count: 1 } }, {new: true})
+        .then(response => {
+            if (!response) {
+                resetPartNumber(req, res);
+            } else {
+                const partNums = [];
+                partNums.push('PRT-' + response.count);
+                res.json({partNumbers: partNums});
+            }
+        })
+        .catch(err => {
             res.send(err);
-
-        if (!response) {
-            resetPartNumber(req, res);
-        } else {
-            const partNums = [];
-            partNums.push('PRT-' + response.count);
-            res.json({partNumbers: partNums});
-        }
-    });
+        });
 };
