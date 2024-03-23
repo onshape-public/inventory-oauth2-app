@@ -9,7 +9,8 @@
     "eslint": "eslint .",
     "eslint:fix": "eslint . --fix",
     "lint:fix": "eslint . --fix",
-    "fix": "eslint . --fix"
+    "fix": "eslint . --fix",
+    "prettier": "prettier --write ."
   },
   "author": "Onshape Developer",
   "license": "MIT",
@@ -32,6 +33,8 @@
     "uuid": "^7.0.3"
   },
   "devDependencies": {
-    "eslint": "^8.57.0"
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "3.2.5"
   }
 }
