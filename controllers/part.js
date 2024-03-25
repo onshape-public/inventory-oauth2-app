@@ -1,15 +1,15 @@
 // Load required packages
-const Part = require('../models/part');
+const Part = require("../models/part");
 
-const getPartsList = function(req, res, callback) {
+const getPartsList = function (req, res, callback) {
   // Use the Part model to find all part
-  Part.find({ userId: req.user._id}, (err, parts) => {
+  Part.find({ userId: req.user._id }, (err, parts) => {
     callback(err, parts);
   });
 };
 
 // Create endpoint /api/parts for POSTS
-exports.postParts = function(req, res) {
+exports.postParts = function (req, res) {
   // Create a new instance of the Part model
   const part = new Part();
 
@@ -22,79 +22,95 @@ exports.postParts = function(req, res) {
   part.userId = req.user._id;
 
   // Save the part and check for errors
-  part.save(err => {
-    if (err)
-    {res.send(err);}
+  part.save((err) => {
+    if (err) {
+      res.send(err);
+    }
 
-    res.json({ message: 'Part added to the Inventory!', data: part });
+    res.json({ message: "Part added to the Inventory!", data: part });
   });
 };
 
 // Create endpoint /api/parts for GET
-exports.getParts = function(req, res) {
+exports.getParts = function (req, res) {
   getPartsList(req, res, (err, parts) => {
-    if (err)
-    {res.send(err);}
+    if (err) {
+      res.send(err);
+    }
 
     res.json(parts);
   });
 };
 
-exports.getPartsList = function(req, res, callback) {
-  return getPartsList(req, res, callback)
+exports.getPartsList = function (req, res, callback) {
+  return getPartsList(req, res, callback);
 };
 
 // Create endpoint /api/parts/:part_number for GET
-exports.getPart = function(req, res) {
+exports.getPart = function (req, res) {
   // Use the Part model to find a specific part
-  Part.find({userId: req.user._id, partNumber: req.params.part_number}, (err, part) => {
-    if (err)
-    {res.send(err);}
+  Part.find(
+    { userId: req.user._id, partNumber: req.params.part_number },
+    (err, part) => {
+      if (err) {
+        res.send(err);
+      }
 
-    res.json(part);
-  });
+      res.json(part);
+    },
+  );
 };
 
 // Create endpoint /api/parts/:part_number for PUT
-exports.postPart = function(req, res) {
+exports.postPart = function (req, res) {
   // Use the Part model to find a specific part
-  Part.find({ userId: req.user._id, partNumber: req.params.part_number }, (err, parts) => {
-    const part = parts[0];
-    if (err)
-    {res.send(err);}
+  Part.find(
+    { userId: req.user._id, partNumber: req.params.part_number },
+    (err, parts) => {
+      const part = parts[0];
+      if (err) {
+        res.send(err);
+      }
 
-    // Update the existing part quantity
-    part.quantity = req.body.quantity;
-    part.revision = req.body.revision;
+      // Update the existing part quantity
+      part.quantity = req.body.quantity;
+      part.revision = req.body.revision;
 
-    // Save the part and check for errors
-    part.save(err => {
-      if (err)
-      {res.send(err);}
+      // Save the part and check for errors
+      part.save((err) => {
+        if (err) {
+          res.send(err);
+        }
 
-      // res.json(part);
-      res.json({ message: 'Part updated!', data: part });
-    });
-  });
+        // res.json(part);
+        res.json({ message: "Part updated!", data: part });
+      });
+    },
+  );
 };
 
 // Create endpoint /api/parts/:part_number for DELETE
-exports.deletePart = function(req, res) {
+exports.deletePart = function (req, res) {
   // Use the Part model to find a specific part and remove it
-  Part.remove({ userId: req.user._id, partNumber: req.params.part_number }, err => {
-    if (err)
-    {res.send(err);}
+  Part.remove(
+    { userId: req.user._id, partNumber: req.params.part_number },
+    (err) => {
+      if (err) {
+        res.send(err);
+      }
 
-    res.json({ message: 'Part removed from the Inventory!' });
-  });
+      res.json({ message: "Part removed from the Inventory!" });
+    },
+  );
 };
 
 // Create endpoint /api/parts/part/:id for DELETE
-exports.deletePartById = function(req, res) {
-  Part.findByIdAndRemove(req.params.part_id, err => {
-    if (err)
-    {res.send(err);}
+exports.deletePartById = function (req, res) {
+  Part.findByIdAndRemove(req.params.part_id, (err) => {
+    if (err) {
+      res.send(err);
+    }
 
-    res.json({ message: 'Part removed from the locker new!' });
+    res.json({ message: "Part removed from the locker new!" });
   });
 };
