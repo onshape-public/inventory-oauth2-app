@@ -1,10 +1,10 @@
 // Load required packages
-var Application = require('../models/application');
+const Application = require('../models/application');
 
 // Create endpoint /api/application for POST
 exports.postApplications = function(req, res) {
   // Create a new instance of the Application model
-  var application = new Application();
+  const application = new Application();
 
   // Set the application properties that came from the POST data
   application.name = req.body.name;
@@ -13,9 +13,9 @@ exports.postApplications = function(req, res) {
   application.userId = req.user._id;
 
   // Save the application and check for errors
-  application.save(function(err) {
+  application.save(err => {
     if (err)
-      res.send(err);
+    {res.send(err);}
 
     res.json({ message: 'Application added to the locker!', data: application });
   });
@@ -24,9 +24,9 @@ exports.postApplications = function(req, res) {
 // Create endpoint /api/applications for GET
 exports.getApplications = function(req, res) {
   // Use the Application model to find all applications
-  Application.find({ userId: req.user._id }, function(err, applications) {
+  Application.find({ userId: req.user._id }, (err, applications) => {
     if (err)
-      res.send(err);
+    {res.send(err);}
 
     res.json(applications);
   });

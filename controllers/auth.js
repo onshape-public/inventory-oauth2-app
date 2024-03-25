@@ -1,22 +1,22 @@
 // Load required packages
-var passport = require('passport');
-var BasicStrategy = require('passport-http').BasicStrategy;
-var BearerStrategy = require('passport-http-bearer').Strategy
-var LocalStrategy = require('passport-local').Strategy
-var Token = require('../models/token');
-var Application = require('../models/application');
-var User = require('../models/user');
+const passport = require('passport');
+const BasicStrategy = require('passport-http').BasicStrategy;
+const BearerStrategy = require('passport-http-bearer').Strategy
+const LocalStrategy = require('passport-local').Strategy
+const Token = require('../models/token');
+const Application = require('../models/application');
+const User = require('../models/user');
 
 passport.use(new BasicStrategy(
-  function(username, password, callback) {
-    User.findOne({ username: username }, function (err, user) {
+  (username, password, callback) => {
+    User.findOne({ username: username }, (err, user) => {
       if (err) { return callback(err); }
 
       // No user found with that username
       if (!user) { return callback(null, false); }
 
       // Make sure the password is correct
-      user.verifyPassword(password, function(err, isMatch) {
+      user.verifyPassword(password, (err, isMatch) => {
         if (err) { return callback(err); }
 
         // Password did not match
@@ -30,8 +30,8 @@ passport.use(new BasicStrategy(
 ));
 
 passport.use('application-basic', new BasicStrategy(
-  function(username, password, callback) {
-    Application.findOne({ id: username }, function (err, application) {
+  (username, password, callback) => {
+    Application.findOne({ id: username }, (err, application) => {
       if (err) { return callback(err); }
 
       // No application found with that id or bad password
@@ -43,21 +43,21 @@ passport.use('application-basic', new BasicStrategy(
   }
 ));
 
-passport.use(new BearerStrategy(function(accessToken, callback) {
-  Token.findOne({access: accessToken }, function (err, token) {
+passport.use(new BearerStrategy((accessToken, callback) => {
+  Token.findOne({access: accessToken }, (err, token) => {
     if (err) { return callback(err); }
 
     // No token found
     if (!token) { return callback(null, false); }
 
     // Token expired
-    var now = new Date();
+    const now = new Date();
 
     if ((Math.abs(token.dateModified.getTime() - now.getTime()) / 1000) > token.expiryTime) {
-        return callback(null, false);
+      return callback(null, false);
     }
 
-    User.findOne({ _id: token.userId }, function (err, user) {
+    User.findOne({ _id: token.userId }, (err, user) => {
       if (err) { return callback(err); }
 
       // No user found
@@ -70,20 +70,19 @@ passport.use(new BearerStrategy(function(accessToken, callback) {
 }));
 
 passport.use('local-part', new LocalStrategy({
-    usernameField: 'client_id',
-    passwordField: 'client_secret'
-  }, function(clientId, clientSecret, callback) {
-    Application.findOne({ clientId: clientId }, function (err, application) {
-      if (err) { return callback(err); }
+  usernameField: 'client_id',
+  passwordField: 'client_secret'
+}, ((clientId, clientSecret, callback) => {
+  Application.findOne({ clientId: clientId }, (err, application) => {
+    if (err) { return callback(err); }
 
-      // No application found with that id or bad password
-      if (!application || application.clientSecret !== clientSecret) { return callback(null, false); }
+    // No application found with that id or bad password
+    if (!application || application.clientSecret !== clientSecret) { return callback(null, false); }
 
-      // Success
-      return callback(null, application);
-    });
-  })
-);
+    // Success
+    return callback(null, application);
+  });
+})));
 
-exports.isAuthenticated = passport.authenticate(['basic', 'bearer'], { session : false });
-exports.isApplicationAuthenticated = passport.authenticate('local-part', { session : false });
+exports.isAuthenticated = passport.authenticate(['basic', 'bearer'], { session: false });
+exports.isApplicationAuthenticated = passport.authenticate('local-part', { session: false });

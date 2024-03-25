@@ -1,8 +1,8 @@
 // Load required packages
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 // Define our token schema
-var CodeSchema   = new mongoose.Schema({
+const CodeSchema   = new mongoose.Schema({
   value: { type: String, required: true },
   redirectUri: { type: String, required: true },
   userId: { type: String, required: true },

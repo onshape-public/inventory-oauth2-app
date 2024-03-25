@@ -1,8 +1,8 @@
 // Load required packages
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 // Define our part schema
-var PartSchema   = new mongoose.Schema({
+const PartSchema   = new mongoose.Schema({
   partNumber: String,
   name: String,
   quantity: Number,

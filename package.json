@@ -5,7 +5,11 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "eslint": "eslint .",
+    "eslint:fix": "eslint . --fix",
+    "lint:fix": "eslint . --fix",
+    "fix": "eslint . --fix"
   },
   "author": "Onshape Developer",
   "license": "MIT",
@@ -13,6 +17,7 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.19.0",
     "ejs": "^3.0.1",
+    "eslint-plugin-import": "^2.29.1",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "mongoose": "^5.8.4",
@@ -25,5 +30,8 @@
     "passport-oauth2": "^1.5.0",
     "sleep": "^6.1.0",
     "uuid": "^7.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0"
   }
 }

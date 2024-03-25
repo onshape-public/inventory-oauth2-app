@@ -1,19 +1,18 @@
 // Get the packages we need
-var express = require('express');
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
-var ejs = require('ejs');
-var http = require('http');
-var path = require('path');
-var authController = require('./controllers/auth');
-var partController = require('./controllers/part');
-var partNumberController = require('./controllers/partNumber');
-var generatorController = require('./controllers/generator');
-var applicationController = require('./controllers/application');
-var generatorController = require('./controllers/generator');
-var session = require('express-session');
-var oauth2Controller = require('./controllers/oauth2');
-var userController = require('./controllers/user');
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const ejs = require('ejs');
+const http = require('http');
+const path = require('path');
+const authController = require('./controllers/auth');
+const partController = require('./controllers/part');
+const partNumberController = require('./controllers/partNumber');
+const generatorController = require('./controllers/generator');
+const applicationController = require('./controllers/application');
+const session = require('express-session');
+const oauth2Controller = require('./controllers/oauth2');
+const userController = require('./controllers/user');
 
 // Connect to the inventoryapplicationdb MongoDB
 if (process.env.ENVIRONMENT === 'production') {
@@ -25,7 +24,7 @@ if (process.env.ENVIRONMENT === 'production') {
 }
 
 // Create our Express application
-var app = express();
+const app = express();
 
 app.set('view engine', 'ejs');
 // Use the body-parser package in our application
@@ -44,10 +43,10 @@ app.use(session({
 }));
 
 // Use environment defined port or 3000
-var port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 // Create our Express router
-var router = express.Router();
+const router = express.Router();
 
 // Create endpoint handlers for /parts
 router.route('/parts')
@@ -56,18 +55,18 @@ router.route('/parts')
 
 // Create endpointd for /generate
 router.route('/v1/generate')
-  .post(authController.isAuthenticated,generatorController.generate_v1);
+  .post(authController.isAuthenticated, generatorController.generate_v1);
 
 router.route('/v4/generate')
-  .post(authController.isAuthenticated,generatorController.generate_v4);
+  .post(authController.isAuthenticated, generatorController.generate_v4);
 
 router.route('/v5/generate')
-  .post(authController.isAuthenticated,generatorController.generate_v5);
+  .post(authController.isAuthenticated, generatorController.generate_v5);
 
 // Create endpoint handlers for /parts
 router.route('/parts-list')
-  .get(authController.isAuthenticated, function(req, res) {
-    partController.getPartsList(req, res, function(err, parts) {
+  .get(authController.isAuthenticated, (req, res) => {
+    partController.getPartsList(req, res, (err, parts) => {
       if (err) {
         res.send(err);
       }
@@ -111,7 +110,7 @@ router.route('/oauth2/token')
 
 // Initial dummy route for testing
 // http://localhost:3000/api
-router.get('/', function(req, res) {
+router.get('/', (req, res) => {
   res.json({ message: 'You are running inventory application!'});
 });
 
@@ -121,4 +120,4 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Start the server
 app.listen(port);
-console.log('Application running on port ' + port);
+console.log(`Application running on port ${  port }`);

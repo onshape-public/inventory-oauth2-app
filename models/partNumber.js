@@ -1,8 +1,8 @@
 // Load required packages
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 // Define our token schema
-var PartNumberSchema   = new mongoose.Schema({
+const PartNumberSchema   = new mongoose.Schema({
   count: { type: Number, required: true }
 });
 
